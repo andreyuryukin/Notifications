@@ -167,7 +167,6 @@ public class NotificationService extends Service {
                 break;
         }
 
-
         Calendar c = Calendar.getInstance();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -202,8 +201,12 @@ public class NotificationService extends Service {
         }, 10000);
 
         try {
+            Calendar c = Calendar.getInstance();
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             file = new File(Environment.getExternalStorageDirectory(),
-                    "" + new Random().nextInt(50) + ".3gp");
+                    "" + df.format(c.getTime()) + ".3gp");
 
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
