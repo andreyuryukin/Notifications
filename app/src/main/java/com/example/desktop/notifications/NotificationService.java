@@ -71,11 +71,11 @@ public class NotificationService extends Service {
 
                 if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                     Log.v("**onCreate**", "ACTION_ACL_CONNECTED " + device.getName() + "\n");
-                    sendNotification(ACT_CONNECTED, file);
+                    sendNotification(ACT_CONNECTED);
                     recordAudioFragment();
                 } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                     Log.v("**onCreate**", "ACTION_ACL_DISCONNECTED " + device.getName() + "\n");
-                    sendNotification(ACT_DISCONNECTED, file);
+                    sendNotification(ACT_DISCONNECTED);
                     recordAudioFragment();
                 } else if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
                     recordAudioFragment();
@@ -119,7 +119,7 @@ public class NotificationService extends Service {
         }
     }
 
-    public void sendNotification(Integer actionCode, File file) {
+    public void sendNotification(Integer actionCode) {
 
         Calendar c = Calendar.getInstance();
 
@@ -171,7 +171,7 @@ public class NotificationService extends Service {
                 mediaRecorder.reset();
                 mediaRecorder.release();
                 Log.v("**recordAudioFragment**", "Stopping voice recording");
-                sendNotification(ACT_RECORDING_FINISHED, file);
+                sendNotification(ACT_RECORDING_FINISHED);
             }
         }, 10000);
 
@@ -193,7 +193,7 @@ public class NotificationService extends Service {
 
             mediaRecorder.prepare();
             mediaRecorder.start();
-            sendNotification(ACT_RECORDING_STARTED, file);
+            sendNotification(ACT_RECORDING_STARTED);
 
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
