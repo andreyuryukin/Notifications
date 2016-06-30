@@ -77,19 +77,19 @@ public class NotificationService extends Service {
                     Log.v("**onCreate**", "ACTION_ACL_DISCONNECTED " + device.getName() + "\n");
                     sendNotification(ACT_DISCONNECTED);
                     recordAudioFragment();
-                } else if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
-                    recordAudioFragment();
+//                } else if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
+//                    recordAudioFragment();
                 }
             }
         };
 
         IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        IntentFilter filter3 = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
+//        IntentFilter filter3 = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
 
         this.registerReceiver(mReceiver, filter1);
         this.registerReceiver(mReceiver, filter2);
-        this.registerReceiver(mReceiver, filter3);
+//        this.registerReceiver(mReceiver, filter3);
 
         receiverRegistered = true;
 
@@ -132,12 +132,15 @@ public class NotificationService extends Service {
             case ACT_CONNECTED:
                 contentTitle = "Bluetooth Device Connected";
                 contentText = formattedDate + " " + device.getName();
+                break;
             case ACT_DISCONNECTED:
                 contentTitle = "Bluetooth Device Disconnected";
                 contentText = formattedDate + " " + device.getName();
+                break;
             case ACT_RECORDING_STARTED:
                 contentTitle = "Recording Started";
                 contentText = formattedDate;
+                break;
             case ACT_RECORDING_FINISHED:
                 contentTitle = "Recording Finished";
                 contentText = file.getAbsolutePath();
@@ -146,6 +149,7 @@ public class NotificationService extends Service {
                 Uri uri = Uri.parse("file://" + file.getAbsolutePath());
                 notificationIntent.setDataAndType(uri, "audio/*");
                 pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
         }
 
         builder = new Notification.Builder(context)

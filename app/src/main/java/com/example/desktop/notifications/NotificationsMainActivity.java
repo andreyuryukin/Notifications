@@ -10,7 +10,7 @@ public class NotificationsMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications_main);
+//        setContentView(R.layout.activity_notifications_main);
 
         startService(new Intent(this, NotificationService.class));
 
