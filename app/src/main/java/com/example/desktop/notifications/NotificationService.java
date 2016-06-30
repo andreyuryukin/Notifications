@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -42,6 +43,7 @@ public class NotificationService extends Service {
     public static final int ACT_DISCONNECTED = 2;
     public static final int ACT_RECORDING_STARTED = 3;
     public static final int ACT_RECORDING_FINISHED = 4;
+    public static final int ACT_A2DP_CONNECTION_CHANGED = 5;
     public int notificationNumber;
     public String contentTitle = "contentTitle";
     public String contentText = "contentText";
@@ -77,19 +79,20 @@ public class NotificationService extends Service {
                     Log.v("**onCreate**", "ACTION_ACL_DISCONNECTED " + device.getName() + "\n");
                     sendNotification(ACT_DISCONNECTED);
                     recordAudioFragment();
-//                } else if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
-//                    recordAudioFragment();
+                } else if (BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
+                    sendNotification(ACT_A2DP_CONNECTION_CHANGED);
+                    recordAudioFragment();
                 }
             }
         };
 
         IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-//        IntentFilter filter3 = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
+        IntentFilter filter3 = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
 
         this.registerReceiver(mReceiver, filter1);
         this.registerReceiver(mReceiver, filter2);
-//        this.registerReceiver(mReceiver, filter3);
+        this.registerReceiver(mReceiver, filter3);
 
         receiverRegistered = true;
 
@@ -150,6 +153,9 @@ public class NotificationService extends Service {
                 notificationIntent.setDataAndType(uri, "audio/*");
                 pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
+            case ACT_A2DP_CONNECTION_CHANGED:
+                contentTitle = "A2DP Connection changed";
+                contentText = formattedDate;
         }
 
         builder = new Notification.Builder(context)
