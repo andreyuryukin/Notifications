@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".NotificationService" android:exported="false"></service>
+        <service android:name=".NotificationService" android:exported="false" android:process=":notifications_background"></service>
 
         <receiver android:name=".BootReciever">
             <intent-filter>

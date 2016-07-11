@@ -9,4 +9,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.desktop.notifications.NotificationsMainActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonStart"
+        android:id="@+id/buttonStart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="startNotificationService"
+        android:enabled="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonStop"
+        android:id="@+id/buttonStop"
+        android:layout_below="@+id/buttonStart"
+        android:layout_centerHorizontal="true"
+        android:onClick="stopNotificationService" />
 </RelativeLayout>

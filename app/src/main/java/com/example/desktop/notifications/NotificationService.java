@@ -42,6 +42,7 @@ public class NotificationService extends Service {
     public static final int ACT_DISCONNECTED = 2;
     public static final int ACT_RECORDING_STARTED = 3;
     public static final int ACT_RECORDING_FINISHED = 4;
+    public static final int ACT_SCREEN_OFF = 5;
     public int notificationNumber;
     public String contentTitle = "contentTitle";
     public String contentText = "contentText";
@@ -57,7 +58,6 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v("**onCreate**", "Start");
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -77,15 +77,20 @@ public class NotificationService extends Service {
                     Log.v("**onCreate**", "ACTION_ACL_DISCONNECTED " + device.getName() + "\n");
                     sendNotification(ACT_DISCONNECTED);
                     recordAudioFragment();
+                } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                    Log.v("**onCreate**", "Screen Off \n");
+                    sendNotification(ACT_SCREEN_OFF);
                 }
             }
         };
 
         IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        IntentFilter filter3 = new IntentFilter(Intent.ACTION_SCREEN_OFF);
 
         this.registerReceiver(mReceiver, filter1);
         this.registerReceiver(mReceiver, filter2);
+        this.registerReceiver(mReceiver, filter3);
 
         receiverRegistered = true;
 
@@ -100,7 +105,7 @@ public class NotificationService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.onStartCommand(intent, flags, startID);
+        return START_STICKY;
     }
 
     public void onDestroy() {
@@ -146,6 +151,9 @@ public class NotificationService extends Service {
                 notificationIntent.setDataAndType(uri, "audio/*");
                 pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
+            case ACT_SCREEN_OFF:
+                contentTitle = "Screen Off";
+                contentText = formattedDate;
         }
 
         builder = new Notification.Builder(context)
@@ -162,7 +170,7 @@ public class NotificationService extends Service {
         notificationManager.notify(notificationNumber, notification);
     }
 
-     public void recordAudioFragment() {
+    public void recordAudioFragment() {
 
         new Timer().schedule(new TimerTask() {
             @Override
