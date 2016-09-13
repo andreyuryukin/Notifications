@@ -86,11 +86,11 @@ public class NotificationService extends Service {
 
         IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        IntentFilter filter3 = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+//        IntentFilter filter3 = new IntentFilter(Intent.ACTION_SCREEN_OFF);
 
         this.registerReceiver(mReceiver, filter1);
         this.registerReceiver(mReceiver, filter2);
-        this.registerReceiver(mReceiver, filter3);
+//        this.registerReceiver(mReceiver, filter3);
 
         receiverRegistered = true;
 
